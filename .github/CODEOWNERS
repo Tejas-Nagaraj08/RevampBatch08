@@ -1,0 +1,9 @@
+#Default Owners of all files
+@Tejas-Nagaraj08
+
+#Application code
+/src/* @Tejas-Nagaraj08 #Backend Team
+
+Dockerfile* @Tejas-Nagaraj08 #DevOps Team
+
+.github/* @Tejas-Nagaraj08
