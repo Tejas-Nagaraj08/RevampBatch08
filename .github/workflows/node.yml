@@ -34,4 +34,4 @@ jobs:
           sleep 5
           curl http://localhost:8080
           curl http://localhost:8080/health
-          pkill -f node app.js
+          pkill -f "node app.js"
