@@ -1,0 +1,52 @@
+name: Node input Pipeline
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to deploy'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - production
+      
+      port:
+        description: 'Enter the port number'
+        required: true
+        default: '8080'
+        type: string
+
+jobs:
+  node:
+    runs-on: wsl-linux
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: create .env file
+        run: |
+          echo "PORT=8080" >> .env.development
+          echo "APP=GHA-NODE-DEV-APP" >> .env.development
+          echo "PORT=5000" >> .env.production
+          echo "APP=GHA-NODE-PROD-APP" >> .env.production
+
+      - name: Run application
+        run: | 
+          node app.js ${{ github.event.inputs.environment }} &
+          sleep 5
+          curl http://localhost:${{ github.event.inputs.port }}
+          curl http://localhost:${{ github.event.inputs.port }}/health
+          pkill -f "node app.js"
